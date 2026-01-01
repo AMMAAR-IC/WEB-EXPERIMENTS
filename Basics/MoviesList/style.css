@@ -1,0 +1,17 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f3f3;
+    padding: 30px;
+}
+
+h1 {
+    text-align: center;
+}
+
+ul {
+    font-size: 20px;
+    line-height: 35px;
+    max-width: 300px;
+    margin: auto;
+    list-style-type: square;
+}
