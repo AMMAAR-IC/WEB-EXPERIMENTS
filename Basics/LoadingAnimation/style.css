@@ -1,0 +1,26 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #111;
+    color: white;
+    font-family: Arial;
+    margin: 0;
+}
+
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #444;
+    border-top-color: #00eaff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
