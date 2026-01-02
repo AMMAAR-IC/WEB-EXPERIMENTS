@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Student Data</h1>
+
+<style>
+    body {
+        background-color: rgb(1, 111, 113);
+    }
+    h1 {
+        color: rgb(12, 148, 183);
+    }
+</style>
+
+
+<!-- JAVASCRIPT -->
+<script>
+    const Student = {
+        name: "Ammaar Bakshi",
+        age: 17,
+        enroll: 23111590409,
+        "is Present": true
+    }
+
+    let present = Student["is Present"];
+    document.write("name of the student:"+Student.name+"<br>");
+    
+    if(present==true){
+        document.write("The student status is present <br>");
+        console.log("as u know i am ammaar bakshi");
+    }
+
+    document.write("the age of the student is:"+Student.age+"<br>");
+    document.write("Enroll of the student:"+Student.enroll);
+
+
+</script>
+
+</body>
+</html>
