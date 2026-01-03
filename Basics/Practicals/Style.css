@@ -1,0 +1,41 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: black;
+    color: #00ff9c;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.terminal {
+    width: 90%;
+    max-width: 700px;
+    height: 400px;
+    border: 2px solid #00ff9c;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.input-line {
+    display: flex;
+}
+
+.prompt {
+    margin-right: 5px;
+}
+
+input {
+    background: transparent;
+    border: none;
+    color: #00ff9c;
+    outline: none;
+    flex: 1;
+    font-family: monospace;
+}
