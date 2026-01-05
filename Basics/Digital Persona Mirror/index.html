@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Persona Mirror</title>
+
+<style>
+html, body {
+    margin: 0;
+    height: 100%;
+    background: #060606;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #eaeaea;
+    overflow: hidden;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: background 1s ease;
+}
+
+.message {
+    max-width: 700px;
+    padding: 40px;
+    font-size: 28px;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 2s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.calm { background: radial-gradient(circle, #0c1f2e, #020b13); }
+.curious { background: radial-gradient(circle, #1e2b1e, #050a05); }
+.restless { background: radial-gradient(circle, #2b1a1a, #0a0404); }
+.intense { background: radial-gradient(circle, #220022, #050005); }
+
+small {
+    display: block;
+    margin-top: 20px;
+    opacity: 0.5;
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container calm" id="container">
+    <div class="message" id="message">
+        You are here.  
+        Not rushing.  
+        Observing.
+        <small>Move. Pause. Click.</small>
+    </div>
+</div>
+
+<script>
+const container = document.getElementById("container");
+const message = document.getElementById("message");
+
+let lastMove = Date.now();
+let speed = 0;
+let clicks = 0;
+let idleTime = 0;
+
+let currentState = "calm";
+
+window.addEventListener("mousemove", e => {
+    const now = Date.now();
+    const dt = now - lastMove;
+    lastMove = now;
+
+    speed = 1000 / Math.max(dt, 1);
+});
+
+window.addEventListener("click", () => clicks++);
+
+setInterval(() => {
+    idleTime += 1;
+
+    if (Date.now() - lastMove < 200) idleTime = 0;
+
+    let nextState = "calm";
+
+    if (idleTime > 5) nextState = "calm";
+    else if (speed < 3) nextState = "curious";
+    else if (speed < 7 || clicks > 5) nextState = "restless";
+    else nextState = "intense";
+
+    if (nextState !== currentState) {
+        currentState = nextState;
+        container.className = "container " + currentState;
+        updateMessage(currentState);
+    }
+
+    clicks = 0;
+}, 1000);
+
+function updateMessage(state) {
+    const texts = {
+        calm: [
+            "You slow down when nothing demands you.",
+            "Silence does not bother you.",
+            "You are present."
+        ],
+        curious: [
+            "You explore without urgency.",
+            "You are looking, not chasing.",
+            "Something here holds you."
+        ],
+        restless: [
+            "You seek stimulation.",
+            "Your movement speaks louder than words.",
+            "You want something to happen."
+        ],
+        intense: [
+            "You move with purpose.",
+            "Your focus is sharp.",
+            "You are not here by accident."
+        ]
+    };
+
+    message.style.opacity = 0;
+    setTimeout(() => {
+        message.innerHTML = texts[state][Math.floor(Math.random() * texts[state].length)] +
+            `<small>${state.toUpperCase()}</small>`;
+        message.style.opacity = 1;
+    }, 600);
+}
+</script>
+
+</body>
+</html>
+   s
