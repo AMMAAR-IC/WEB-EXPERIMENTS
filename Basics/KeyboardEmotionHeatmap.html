@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Keyboard Emotion Heatmap</title>
+<style>
+  body {
+    margin: 0;
+    background: #050505;
+    color: #aaa;
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  h1 {
+    font-size: 16px;
+    opacity: 0.6;
+    margin-bottom: 20px;
+  }
+
+  .keyboard {
+    display: grid;
+    grid-template-columns: repeat(10, 50px);
+    gap: 8px;
+  }
+
+  .key {
+    width: 50px;
+    height: 50px;
+    border-radius: 6px;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+</style>
+</head>
+<body>
+
+<h1>Keyboard Emotion Heatmap — type anything</h1>
+
+<div class="keyboard" id="keyboard"></div>
+
+<script>
+const keys = "QWERTYUIOPASDFGHJKLZXCVBNM".split("");
+const keyboard = document.getElementById("keyboard");
+const heat = {};
+
+keys.forEach(k => {
+  heat[k] = 0;
+  const div = document.createElement("div");
+  div.className = "key";
+  div.textContent = k;
+  div.id = "key-" + k;
+  keyboard.appendChild(div);
+});
+
+document.addEventListener("keydown", e => {
+  const k = e.key.toUpperCase();
+  if (!heat[k]) return;
+
+  heat[k] += 1;
+  updateKey(k);
+});
+
+function updateKey(k) {
+  const intensity = Math.min(heat[k], 50);
+  const hue = 240 - intensity * 4;
+  const el = document.getElementById("key-" + k);
+
+  el.style.background = `hsl(${hue},100%,50%)`;
+  el.style.boxShadow = `0 0 ${intensity}px hsl(${hue},100%,60%)`;
+  el.style.color = "#000";
+}
+
+// Memory decay
+setInterval(() => {
+  keys.forEach(k => {
+    heat[k] *= 0.96;
+    updateKey(k);
+  });
+}, 100);
+</script>
+
+</body>
+</html>
