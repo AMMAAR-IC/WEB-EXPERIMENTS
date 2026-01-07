@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Observer Effect</title>
+<style>
+  body {
+    margin: 0;
+    background: #000;
+    color: #7fffd4;
+    font-family: monospace;
+    overflow: hidden;
+  }
+
+  canvas {
+    display: block;
+  }
+
+  .status {
+    position: fixed;
+    bottom: 12px;
+    width: 100%;
+    text-align: center;
+    opacity: 0.5;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<div class="status" id="status">unobserved</div>
+
+<script>
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+let observed = true;
+const status = document.getElementById("status");
+
+// detect observation
+document.addEventListener("visibilitychange", () => {
+  observed = !document.hidden;
+  status.textContent = observed ? "observed" : "unobserved";
+});
+
+window.addEventListener("blur", () => {
+  observed = false;
+  status.textContent = "unobserved";
+});
+
+window.addEventListener("focus", () => {
+  observed = true;
+  status.textContent = "observed";
+});
+
+class Particle {
+  constructor() {
+    this.reset();
+  }
+
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 4;
+    this.vy = (Math.random() - 0.5) * 4;
+    this.life = Math.random() * 500 + 200;
+  }
+
+  update() {
+    // when observed, system calms itself
+    const noise = observed ? 0.02 : 0.25;
+
+    this.vx += (Math.random() - 0.5) * noise;
+    this.vy += (Math.random() - 0.5) * noise;
+
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life--;
+
+    if (
+      this.x < 0 || this.x > canvas.width ||
+      this.y < 0 || this.y > canvas.height ||
+      this.life <= 0
+    ) {
+      this.reset();
+    }
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 1.8, 0, Math.PI * 2);
+    ctx.fillStyle = observed
+      ? "rgba(127,255,212,0.7)"
+      : "rgba(255,80,80,0.8)";
+    ctx.fill();
+  }
+}
+
+let particles = [];
+for (let i = 0; i < 250; i++) particles.push(new Particle());
+
+function animate() {
+  ctx.fillStyle = "rgba(0,0,0,0.2)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener("resize", () => {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+});
+</script>
+
+</body>
+</html> 
