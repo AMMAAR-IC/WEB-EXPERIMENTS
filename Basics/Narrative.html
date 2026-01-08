@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The System Is Listening</title>
+<style>
+  body {
+    margin: 0;
+    background: #050505;
+    color: #e0e0e0;
+    font-family: monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  .box {
+    max-width: 600px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .text {
+    min-height: 120px;
+    opacity: 0.9;
+  }
+
+  button {
+    margin-top: 20px;
+    background: transparent;
+    border: 1px solid #7fffd4;
+    color: #7fffd4;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: monospace;
+  }
+
+  button:hover {
+    background: #7fffd4;
+    color: #000;
+  }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <div class="text" id="text"></div>
+  <button id="next">Continue</button>
+</div>
+
+<script>
+const textEl = document.getElementById("text");
+const nextBtn = document.getElementById("next");
+
+let lastTime = Date.now();
+let responseTimes = [];
+let step = 0;
+
+const fragments = {
+  neutral: [
+    "The system presents information.",
+    "You read. Nothing else is required.",
+    "Time passes between moments."
+  ],
+  decisive: [
+    "You move quickly.",
+    "Hesitation does not define you.",
+    "You prefer momentum to doubt."
+  ],
+  reflective: [
+    "You take your time.",
+    "You sit with ideas before moving.",
+    "Speed has never impressed you."
+  ],
+  conclusion: [
+    "No questions were asked.",
+    "Yet a pattern emerged.",
+    "This description was shaped by you."
+  ]
+};
+
+function average(arr) {
+  return arr.reduce((a,b)=>a+b,0) / arr.length;
+}
+
+function classify() {
+  const avg = average(responseTimes);
+  if (avg < 1200) return "decisive";
+  if (avg > 3000) return "reflective";
+  return "neutral";
+}
+
+function showNext() {
+  const now = Date.now();
+  responseTimes.push(now - lastTime);
+  lastTime = now;
+
+  let mode = classify();
+
+  if (step < 3) {
+    textEl.textContent = fragments.neutral[step];
+  } else if (step < 6) {
+    textEl.textContent = fragments[mode][step - 3];
+  } else {
+    textEl.textContent = fragments.conclusion[step - 6];
+    if (step === 8) nextBtn.style.display = "none";
+  }
+
+  step++;
+}
+
+showNext();
+nextBtn.onclick = showNext;
+</script>
+
+</body>
+</html>
