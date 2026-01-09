@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Trust Decay Network</title>
+<style>
+  body {
+    margin: 0;
+    background: #020202;
+    color: #7fffd4;
+    font-family: monospace;
+    overflow: hidden;
+  }
+  canvas {
+    display: block;
+  }
+  .label {
+    position: fixed;
+    top: 10px;
+    width: 100%;
+    text-align: center;
+    opacity: 0.6;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<div class="label">Trust Decay Network — trust expires if not reinforced</div>
+
+<script>
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+class Node {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.5;
+    this.vy = (Math.random() - 0.5) * 0.5;
+  }
+
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+
+    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+  }
+}
+
+class Link {
+  constructor(a, b) {
+    this.a = a;
+    this.b = b;
+    this.trust = Math.random(); // 0..1
+  }
+
+  update() {
+    // natural decay
+    this.trust -= 0.0008;
+
+    // occasional reinforcement
+    if (Math.random() < 0.002) {
+      this.trust += 0.05;
+    }
+
+    this.trust = Math.max(0, Math.min(1, this.trust));
+  }
+
+  draw() {
+    if (this.trust <= 0) return;
+    ctx.strokeStyle = `rgba(127,255,212,${this.trust})`;
+    ctx.beginPath();
+    ctx.moveTo(this.a.x, this.a.y);
+    ctx.lineTo(this.b.x, this.b.y);
+    ctx.stroke();
+  }
+}
+
+let nodes = [];
+let links = [];
+
+for (let i = 0; i < 40; i++) nodes.push(new Node());
+
+// initial trust
+for (let i = 0; i < nodes.length; i++) {
+  for (let j = i + 1; j < nodes.length; j++) {
+    if (Math.random() < 0.12) {
+      links.push(new Link(nodes[i], nodes[j]));
+    }
+  }
+}
+
+function animate() {
+  ctx.fillStyle = "rgba(0,0,0,0.25)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  nodes.forEach(n => n.update());
+  links.forEach(l => {
+    l.update();
+    l.draw();
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener("resize", () => {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+});
+</script>
+
+</body>
+</html>
