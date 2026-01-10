@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Semantic Drift Engine</title>
+<style>
+  body {
+    margin: 0;
+    background: #030303;
+    color: #e0e0e0;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel {
+    width: 520px;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 12px;
+  }
+
+  .term {
+    font-size: 22px;
+    margin: 20px 0;
+    color: #7fffd4;
+  }
+
+  .meaning {
+    font-size: 13px;
+    opacity: 0.8;
+    min-height: 120px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Semantic Drift Engine</h1>
+  <div class="term" id="term">QUALITY</div>
+  <div class="meaning" id="meaning"></div>
+</div>
+
+<script>
+const meaningEl = document.getElementById("meaning");
+
+let meaning = [
+  "delivering reliable outcomes",
+  "meeting clear standards",
+  "doing things correctly"
+];
+
+// drift operators
+const distortions = [
+  m => m.replace("reliable outcomes", "acceptable outcomes"),
+  m => m.replace("clear standards", "agreed standards"),
+  m => m.replace("doing things correctly", "doing things efficiently"),
+  m => m.replace("efficiently", "quickly"),
+  m => m.replace("acceptable", "sufficient"),
+  m => m.replace("agreed", "expected"),
+  m => m.replace("correctly", "consistently")
+];
+
+function drift() {
+  meaning = meaning.map(m => {
+    if (Math.random() < 0.4) {
+      const d = distortions[Math.floor(Math.random() * distortions.length)];
+      return d(m);
+    }
+    return m;
+  });
+
+  render();
+}
+
+function render() {
+  meaningEl.innerHTML = meaning.join("<br>");
+}
+
+// slow, inevitable drift
+setInterval(drift, 1500);
+render();
+</script>
+
+</body>
+</html>
