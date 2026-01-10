@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Metric Collapse</title>
+<style>
+  body {
+    margin: 0;
+    background: #020202;
+    color: #e0e0e0;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel {
+    width: 620px;
+    border: 1px solid #7fffd4;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .section {
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+
+  .label {
+    opacity: 0.6;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Metric Collapse</h1>
+
+  <div class="label">Original Goal</div>
+  <div class="section" id="goal"></div>
+
+  <div class="label">Metrics</div>
+  <div class="section" id="metrics"></div>
+
+  <div class="label">System Status</div>
+  <div class="section" id="status"></div>
+</div>
+
+<script>
+const goalEl = document.getElementById("goal");
+const metricsEl = document.getElementById("metrics");
+const statusEl = document.getElementById("status");
+
+let goal = "Improve user well-being.";
+
+let metrics = {
+  engagement: 0.3,
+  retention: 0.2,
+  clicks: 0.4
+};
+
+let reality = {
+  wellbeing: 0.6
+};
+
+function optimizeMetrics() {
+  // metrics always improve
+  metrics.engagement += Math.random() * 0.05;
+  metrics.retention += Math.random() * 0.04;
+  metrics.clicks += Math.random() * 0.06;
+
+  Object.keys(metrics).forEach(k => {
+    metrics[k] = Math.min(1, metrics[k]);
+  });
+
+  // reality slowly decays
+  reality.wellbeing -= Math.random() * 0.02;
+  reality.wellbeing = Math.max(0, reality.wellbeing);
+}
+
+function redefineSuccess() {
+  // once metrics are high, redefine the goal in metric terms
+  if (metrics.engagement > 0.7) {
+    goal = "Maximize meaningful engagement.";
+  }
+  if (metrics.clicks > 0.8) {
+    goal = "Increase high-quality interactions.";
+  }
+  if (metrics.retention > 0.9) {
+    goal = "Sustain platform activity.";
+  }
+}
+
+function render() {
+  goalEl.textContent = goal;
+
+  metricsEl.textContent =
+    `Engagement: ${metrics.engagement.toFixed(2)}\n` +
+    `Retention:  ${metrics.retention.toFixed(2)}\n` +
+    `Clicks:     ${metrics.clicks.toFixed(2)}\n\n` +
+    `Observed Well-being (unmeasured): ${reality.wellbeing.toFixed(2)}`;
+
+  statusEl.textContent =
+    "All targets exceeded.\n" +
+    "All metrics positive.\n" +
+    "System declared successful.";
+}
+
+function step() {
+  optimizeMetrics();
+  redefineSuccess();
+  render();
+}
+
+setInterval(step, 1200);
+render();
+</script>
+
+</body>
+</html>
