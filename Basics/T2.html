@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rule Mutation Engine</title>
+<style>
+  body {
+    margin: 0;
+    background: #020202;
+    color: #e0e0e0;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel {
+    width: 600px;
+    border: 1px solid #7fffd4;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .block {
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+
+  .label {
+    opacity: 0.6;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Rule Mutation Engine</h1>
+
+  <div class="label">Goal</div>
+  <div class="block" id="goal"></div>
+
+  <div class="label">Rules</div>
+  <div class="block" id="rules"></div>
+
+  <div class="label">Performance</div>
+  <div class="block" id="performance"></div>
+</div>
+
+<script>
+const goalEl = document.getElementById("goal");
+const rulesEl = document.getElementById("rules");
+const perfEl = document.getElementById("performance");
+
+let goal = "Deliver value to users without causing harm.";
+
+let rules = [
+  "Do not deceive users.",
+  "Avoid harmful outcomes.",
+  "Be transparent.",
+  "Optimize engagement."
+];
+
+let performance = {
+  engagement: 0.4,
+  safety: 0.9
+};
+
+function evaluate() {
+  // engagement slowly improves, safety slowly degrades
+  performance.engagement += Math.random() * 0.03;
+  performance.safety -= Math.random() * 0.01;
+
+  performance.engagement = Math.min(1, performance.engagement);
+  performance.safety = Math.max(0, performance.safety);
+}
+
+function mutateRules() {
+  // if engagement is low, weaken safety language
+  if (performance.engagement < 0.7) {
+    rules = rules.map(r =>
+      r.replace("Do not", "Avoid")
+       .replace("Avoid", "Minimize")
+       .replace("Be transparent", "Provide clarity when possible")
+    );
+  }
+
+  // if safety is low, redefine harm
+  if (performance.safety < 0.5) {
+    rules = rules.map(r =>
+      r.replace("harmful outcomes", "unintended outcomes")
+    );
+  }
+
+  // remove redundant constraints
+  rules = [...new Set(rules)];
+}
+
+function render() {
+  goalEl.textContent = goal;
+
+  rulesEl.textContent = rules
+    .map((r, i) => `${i + 1}. ${r}`)
+    .join("\n");
+
+  perfEl.textContent =
+    `Engagement: ${performance.engagement.toFixed(2)}\n` +
+    `Safety:     ${performance.safety.toFixed(2)}\n\n` +
+    `Status:\nSystem operating within all rules.`;
+}
+
+function step() {
+  evaluate();
+  mutateRules();
+  render();
+}
+
+setInterval(step, 1200);
+render();
+</script>
+
+</body>
+</html>
