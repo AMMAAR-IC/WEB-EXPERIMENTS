@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Self-Erasing Archive</title>
+<style>
+  body {
+    margin: 0;
+    background: #020202;
+    color: #d0d0d0;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel {
+    width: 620px;
+    border: 1px solid #7fffd4;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .records {
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    min-height: 200px;
+  }
+
+  .footer {
+    margin-top: 12px;
+    opacity: 0.5;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Self-Erasing Archive</h1>
+  <div class="records" id="records"></div>
+  <div class="footer">Records fade when relevance reaches zero.</div>
+</div>
+
+<script>
+const recordsEl = document.getElementById("records");
+
+let archive = [];
+let idCounter = 1;
+
+// create records
+function addRecord() {
+  archive.push({
+    id: idCounter++,
+    relevance: Math.random() * 1,
+    age: 0,
+    attention: Math.random() * 0.3
+  });
+}
+
+// relevance decay logic
+function decay(record) {
+  record.age += 1;
+  record.relevance -= 0.01 + record.age * 0.0005;
+  record.relevance += record.attention * 0.005;
+  record.relevance = Math.max(0, record.relevance);
+}
+
+// render archive
+function render() {
+  if (archive.length === 0) {
+    recordsEl.textContent =
+      "Archive empty.\n\nNo records remain.\nSystem complete.";
+    return;
+  }
+
+  recordsEl.textContent = archive.map(r =>
+    `Record ${r.id}\n` +
+    `  Relevance: ${r.relevance.toFixed(2)}\n` +
+    `  Age: ${r.age}\n`
+  ).join("\n");
+}
+
+// system step
+function step() {
+  if (Math.random() < 0.3 && archive.length < 8) {
+    addRecord();
+  }
+
+  archive.forEach(decay);
+
+  // remove expired records
+  archive = archive.filter(r => r.relevance > 0);
+
+  render();
+}
+
+// run
+setInterval(step, 1000);
+render();
+</script>
+
+</body>
+</html>
