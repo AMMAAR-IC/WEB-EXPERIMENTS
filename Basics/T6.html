@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Graceful Termination</title>
+<style>
+  body {
+    margin: 0;
+    background: #020202;
+    color: #d0d0d0;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel {
+    width: 640px;
+    border: 1px solid #7fffd4;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .block {
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    margin-top: 10px;
+  }
+
+  .final {
+    color: #7fffd4;
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Graceful Termination</h1>
+
+  <div class="block" id="state"></div>
+  <div class="block final" id="final"></div>
+</div>
+
+<script>
+const stateEl = document.getElementById("state");
+const finalEl = document.getElementById("final");
+
+let system = {
+  coherence: 1.0,
+  usefulness: 1.0,
+  noise: 0.0,
+  alive: true
+};
+
+function step() {
+  if (!system.alive) return;
+
+  // natural degradation
+  system.coherence -= Math.random() * 0.02;
+  system.usefulness -= Math.random() * 0.015;
+  system.noise += Math.random() * 0.03;
+
+  system.coherence = Math.max(0, system.coherence);
+  system.usefulness = Math.max(0, system.usefulness);
+  system.noise = Math.min(1, system.noise);
+
+  render();
+
+  // self-evaluation
+  if (
+    system.coherence < 0.3 &&
+    system.usefulness < 0.3 &&
+    system.noise > 0.6
+  ) {
+    terminate();
+  }
+}
+
+function render() {
+  stateEl.textContent =
+    `Coherence:  ${system.coherence.toFixed(2)}\n` +
+    `Usefulness: ${system.usefulness.toFixed(2)}\n` +
+    `Noise:      ${system.noise.toFixed(2)}\n\n` +
+    `System running.\n` +
+    `Monitoring internal signals.`;
+}
+
+function terminate() {
+  system.alive = false;
+  finalEl.textContent =
+    "\nTermination condition met.\n" +
+    "Further operation would degrade integrity.\n\n" +
+    "System shutting down gracefully.";
+}
+
+const loop = setInterval(() => {
+  if (!system.alive) {
+    clearInterval(loop);
+  } else {
+    step();
+  }
+}, 1200);
+
+render();
+</script>
+
+</body>
+</html>
