@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Post-Goal System</title>
+<style>
+  body {
+    margin: 0;
+    background: #020202;
+    color: #d0d0d0;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel {
+    width: 600px;
+    border: 1px solid #7fffd4;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .block {
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    margin-top: 10px;
+  }
+
+  .label {
+    opacity: 0.6;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Post-Goal System</h1>
+
+  <div class="label">Original Goal</div>
+  <div class="block" id="goal"></div>
+
+  <div class="label">System State</div>
+  <div class="block" id="state"></div>
+
+  <div class="label">Current Behavior</div>
+  <div class="block" id="behavior"></div>
+</div>
+
+<script>
+const goalEl = document.getElementById("goal");
+const stateEl = document.getElementById("state");
+const behaviorEl = document.getElementById("behavior");
+
+let goal = "Optimize system efficiency.";
+let achieved = true;
+
+let state = {
+  activity: 0.5,
+  coherence: 0.8,
+  purpose: 0.0
+};
+
+const behaviors = [
+  "Maintaining internal consistency.",
+  "Repeating validated procedures.",
+  "Monitoring variables without action.",
+  "Preserving structure.",
+  "Continuing previous routines."
+];
+
+function step() {
+  // system continues despite no goal
+  state.activity += (Math.random() - 0.5) * 0.02;
+  state.coherence -= Math.random() * 0.01;
+  state.purpose = Math.max(0, state.purpose - 0.01);
+
+  state.activity = Math.max(0, Math.min(1, state.activity));
+  state.coherence = Math.max(0, state.coherence);
+
+  render();
+}
+
+function render() {
+  goalEl.textContent =
+    goal + "\n\nStatus: Achieved.";
+
+  stateEl.textContent =
+    `Activity:   ${state.activity.toFixed(2)}\n` +
+    `Coherence:  ${state.coherence.toFixed(2)}\n` +
+    `Purpose:    ${state.purpose.toFixed(2)}\n\n` +
+    `No further objectives defined.`;
+
+  behaviorEl.textContent =
+    behaviors[Math.floor(Math.random() * behaviors.length)];
+}
+
+setInterval(step, 1300);
+render();
+</script>
+
+</body>
+</html>
