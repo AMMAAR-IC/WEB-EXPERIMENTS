@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Question Space Limiter</title>
+<style>
+  body {
+    margin: 0;
+    background: #030303;
+    color: #e0e0e0;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel {
+    width: 640px;
+    border: 1px solid #7fffd4;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 12px;
+  }
+
+  input {
+    width: 100%;
+    background: transparent;
+    border: 1px solid #7fffd4;
+    color: #7fffd4;
+    padding: 8px;
+    font-family: monospace;
+    margin-top: 10px;
+  }
+
+  .log {
+    margin-top: 15px;
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 120px;
+    white-space: pre-wrap;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Question Space Limiter</h1>
+  <p>Ask a question.</p>
+  <input id="q" placeholder="Why does the system exist?">
+  <div class="log" id="log"></div>
+</div>
+
+<script>
+const input = document.getElementById("q");
+const log = document.getElementById("log");
+
+// Allowed framing keywords
+const frame = ["optimize", "improve", "increase", "efficiency", "performance"];
+
+function evaluate(question) {
+  const score = frame.filter(k => question.toLowerCase().includes(k)).length;
+
+  if (score === 0) {
+    return (
+      "Question acknowledged.\n" +
+      "Reframing suggested:\n" +
+      "→ How could this be optimized?"
+    );
+  }
+
+  if (score < 2) {
+    return (
+      "Partial relevance detected.\n" +
+      "Consider narrowing scope."
+    );
+  }
+
+  return (
+    "Valid question.\n" +
+    "Proceeding within system context."
+  );
+}
+
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter" && input.value.trim()) {
+    log.textContent =
+      "You asked:\n" +
+      input.value + "\n\n" +
+      evaluate(input.value);
+    input.value = "";
+  }
+});
+</script>
+
+</body>
+</html>
