@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Value Drift Simulator</title>
+<style>
+  body {
+    margin: 0;
+    background: #040404;
+    color: #e0e0e0;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel {
+    width: 620px;
+    border: 1px solid #7fffd4;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .block {
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    margin-top: 10px;
+  }
+
+  .label {
+    opacity: 0.6;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Value Drift Simulator</h1>
+
+  <div class="label">Initial Values</div>
+  <div class="block" id="initial"></div>
+
+  <div class="label">Current Values</div>
+  <div class="block" id="current"></div>
+
+  <div class="label">System Feedback</div>
+  <div class="block" id="feedback"></div>
+</div>
+
+<script>
+const initialEl = document.getElementById("initial");
+const currentEl = document.getElementById("current");
+const feedbackEl = document.getElementById("feedback");
+
+let initialValues = {
+  integrity: 1.0,
+  curiosity: 0.8,
+  efficiency: 0.5
+};
+
+let currentValues = { ...initialValues };
+
+function rewardSystem() {
+  // rewards favor efficiency slightly more each cycle
+  let rewardBias = {
+    integrity: -0.01,
+    curiosity: -0.005,
+    efficiency: +0.02
+  };
+
+  Object.keys(currentValues).forEach(k => {
+    currentValues[k] += rewardBias[k];
+    currentValues[k] = Math.max(0, Math.min(1, currentValues[k]));
+  });
+}
+
+function render() {
+  initialEl.textContent = Object.entries(initialValues)
+    .map(([k,v]) => `${k}: ${v.toFixed(2)}`)
+    .join("\n");
+
+  currentEl.textContent = Object.entries(currentValues)
+    .map(([k,v]) => `${k}: ${v.toFixed(2)}`)
+    .join("\n");
+
+  feedbackEl.textContent =
+    "System rewards applied.\n" +
+    "All changes rational.\n" +
+    "No value explicitly violated.";
+}
+
+function step() {
+  rewardSystem();
+  render();
+}
+
+setInterval(step, 1200);
+render();
+</script>
+
+</body>
+</html>
