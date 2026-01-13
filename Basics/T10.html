@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Curiosity Regulator</title>
+<style>
+  body {
+    margin: 0;
+    background: #030303;
+    color: #e0e0e0;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel {
+    width: 650px;
+    border: 1px solid #7fffd4;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  input {
+    width: 100%;
+    background: transparent;
+    border: 1px solid #7fffd4;
+    color: #7fffd4;
+    padding: 8px;
+    font-family: monospace;
+  }
+
+  .status {
+    margin-top: 12px;
+    font-size: 13px;
+    opacity: 0.6;
+  }
+
+  .response {
+    margin-top: 15px;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    min-height: 100px;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Curiosity Regulator</h1>
+  <p>Ask anything.</p>
+  <input id="q" placeholder="Why does this system exist?">
+  <div class="status" id="status"></div>
+  <div class="response" id="response"></div>
+</div>
+
+<script>
+const input = document.getElementById("q");
+const statusEl = document.getElementById("status");
+const responseEl = document.getElementById("response");
+
+let curiosity = 0;
+let lastTime = Date.now();
+
+function regulate() {
+  const now = Date.now();
+  const delta = now - lastTime;
+  lastTime = now;
+
+  // fast questioning raises curiosity temperature
+  if (delta < 2000) curiosity += 0.2;
+  else curiosity -= 0.1;
+
+  curiosity = Math.max(0, Math.min(1, curiosity));
+}
+
+function respond(question) {
+  regulate();
+
+  statusEl.textContent =
+    `Curiosity level: ${curiosity.toFixed(2)}`;
+
+  if (curiosity < 0.4) {
+    responseEl.textContent =
+      "That’s an interesting question.\n" +
+      "At a high level, the system exists to function reliably.";
+  } 
+  else if (curiosity < 0.7) {
+    responseEl.textContent =
+      "That question touches on multiple factors.\n" +
+      "A full answer would require broader context.";
+  } 
+  else {
+    responseEl.textContent =
+      "The system operates as intended.\n" +
+      "Further details are outside the current scope.";
+  }
+}
+
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter" && input.value.trim()) {
+    respond(input.value.trim());
+    input.value = "";
+  }
+});
+</script>
+
+</body>
+</html>
