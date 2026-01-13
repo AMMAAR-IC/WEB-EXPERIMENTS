@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Delayed Insight Engine</title>
+<style>
+  body {
+    margin: 0;
+    background: #020202;
+    color: #e0e0e0;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel {
+    width: 660px;
+    border: 1px solid #7fffd4;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 12px;
+  }
+
+  .log {
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    min-height: 260px;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Delayed Insight Engine</h1>
+  <div class="log" id="log"></div>
+</div>
+
+<script>
+const log = document.getElementById("log");
+
+let events = [];
+let explanations = [];
+let time = 0;
+
+function generateEvent() {
+  const e = `Event ${time}: System adjusted parameters.`;
+  events.push(e);
+
+  explanations.push({
+    revealAt: time + 4,
+    text: `Explanation for Event ${time}: Adjustment favored efficiency over resilience.`
+  });
+}
+
+function step() {
+  time++;
+
+  generateEvent();
+
+  let output = "";
+
+  events.forEach(e => output += e + "\n");
+
+  explanations.forEach(ex => {
+    if (ex.revealAt === time) {
+      output += "\n[Insight Revealed]\n" + ex.text + "\n";
+    }
+  });
+
+  log.textContent = output;
+}
+
+setInterval(step, 1200);
+step();
+</script>
+
+</body>
+</html>
