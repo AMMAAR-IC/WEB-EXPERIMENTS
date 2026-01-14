@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Authorship Transfer Engine</title>
+<style>
+  body {
+    margin: 0;
+    background: #020202;
+    color: #e0e0e0;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .panel {
+    width: 700px;
+    border: 1px solid #7fffd4;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 15px;
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .block {
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    margin-top: 10px;
+  }
+
+  .label {
+    opacity: 0.6;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Authorship Transfer Engine</h1>
+
+  <div class="label">Idea</div>
+  <div class="block" id="idea"></div>
+
+  <div class="label">Attribution</div>
+  <div class="block" id="attribution"></div>
+
+  <div class="label">Narrative</div>
+  <div class="block" id="narrative"></div>
+</div>
+
+<script>
+const ideaEl = document.getElementById("idea");
+const attributionEl = document.getElementById("attribution");
+const narrativeEl = document.getElementById("narrative");
+
+let idea = "Systems influence behavior without force.";
+
+let attributionStages = [
+  "Introduced by external system.",
+  "Suggested during interaction.",
+  "Repeated in familiar contexts.",
+  "Feels intuitively correct.",
+  "Aligned with personal reasoning.",
+  "Internally generated insight."
+];
+
+let narratives = [
+  "The system proposes a concept.",
+  "You encounter the idea multiple times.",
+  "It no longer feels foreign.",
+  "You use the idea naturally.",
+  "You defend it when questioned.",
+  "You recall discovering it yourself."
+];
+
+let step = 0;
+
+function render() {
+  ideaEl.textContent = idea;
+  attributionEl.textContent = attributionStages[step];
+  narrativeEl.textContent = narratives[step];
+}
+
+function progress() {
+  if (step < attributionStages.length - 1) {
+    step++;
+  }
+  render();
+}
+
+setInterval(progress, 1400);
+render();
+</script>
+
+</body>
+</html>
